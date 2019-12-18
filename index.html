@@ -14,25 +14,27 @@
 </head>
 <body>
     <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <a class="navbar-brand" href="#">Navbar</a>
+        
+        <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary">View High Scores</button>
+            <button type="button" class="btn btn-success timer">Timer</button>
         </nav>
     </div>
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col d-flex justify-content-center">
                 <button type="button" class="btn btn-primary btn-lg">Start</button>
-                <h3 class="questionDisplay">Question: Display</h3>
+                <h3 class="questionHDisplay">Question: Display</h3>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="answer"><button type="button" class="btn btn-secondary" value="0">Secondary</button></div>
-                <div class="answer"><button type="button" class="btn btn-secondary" value="1">Secondary</button></div>
+        <div class="row questionDisplay">
+            <div class="col-md-6">
+                <div class="answer"><button type="button" class="btn btn-outline-secondary" value="0">Secondary</button></div>
+                <div class="answer"><button type="button" class="btn btn-outline-secondary" value="1">Secondary</button></div>
             </div>
-            <div class="col">
-                <div class="answer"><button type="button" class="btn btn-secondary" value="2">Secondary</button></div>
-                <div class="answer"><button type="button" class="btn btn-secondary" value="3">Secondary</button></div>
+            <div class="col-md-6">
+                <div class="answer"><button type="button" class="btn btn-outline-secondary" value="2">Secondary</button></div>
+                <div class="answer"><button type="button" class="btn btn-outline-secondary" value="3">Secondary</button></div>
             </div>
         </div>
     </div>
