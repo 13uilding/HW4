@@ -46,38 +46,45 @@ questions.push(q5);
 var qHDisp = $(".questionHDisplay");
 var qDisp = $("#questionDisplay");
 var tDisp = $(".timer");
-var score = 0;
-var secondsLeft;
-const qArr = ["correct", "wrong1", "wrong2", "wrong3"];
-var options = [];
-var randQuestions = randomIndexArray(questions);
-var newQuestionIndex = 0;
-
-// Make this appear along with the questions
-qHDisp.attr("style", "display: none");
-qDisp.attr("style", "display: none");
-
-
-// Buttons
+var scoreCard = $(".card");
 var startBtn = $(".btn-primary");
 var ansBtn = $(".btn-outline-secondary");
 var highBtn = $(".btn-secondary");
+visualizeEl("initial");
+var subtractTime = false;
+var outofQuestions = false;
+var bonus = 0;
+var score = 0;
+var newQuestionIndex = 0;
+var secondsLeft = 60;
+var options = [];
+const qArr = ["correct", "wrong1", "wrong2", "wrong3"];
+var randQuestions = randomIndexArray(questions);
 
+
+// Buttons
 startBtn.on("click", function(event){
     event.preventDefault();
     secondsLeft = 60;
     visualizeEl("start");
     setTime();
-    console.log("I'm a start");
 });
 
+// Add hovering and change the click interaction
 ansBtn.on("click", function(event){
     event.preventDefault();
-    // Add points for getting the correct one
-    // Take off time for getting the wrong one
-    console.log("I'm " + $(this).attr("value"));
+    if ($(this).text() === randQuestions[newQuestionIndex].correct){
+        score++;
+    } else {
+        subtractTime = true;
+    };
+    newQuestionIndex++;
+    if (newQuestionIndex === questions.length){
+        outofQuestions = true;
+        bonus = secondsLeft;
+        visualizeEl("score");
+    };
     visualizeEl("newQuestion");
-
 });
 
 highBtn.on("click", function(event){
@@ -90,8 +97,17 @@ function setTime() {
     var timerInterval = setInterval(function() {
       tDisp.text("Timer: " + secondsLeft + "s");
       secondsLeft--;
+      if (subtractTime){
+          if (secondsLeft > 15){
+              secondsLeft -= 15;
+              subtractTime = false;
+          } else {
+              secondsLeft = 0;
+              subtractTime = false;
+          };
+        };
       // Need this to end if we run out of questions
-      if(secondsLeft === 0) {
+      if(secondsLeft === 0 || outofQuestions) {
         clearInterval(timerInterval);
         visualizeEl("score");
       }
@@ -100,7 +116,6 @@ function setTime() {
 };
 
 // Produces a random order for the given array
-// !!!! Could improve but works for now
 function randomIndexArray(arr){
     var ranIndexArr = [];
     while ( ranIndexArr.length !== arr.length ){
@@ -119,6 +134,12 @@ function randomIndexArray(arr){
 // Visualizes the different elements on the screen depending on the event
 function visualizeEl(event) {
     switch(event) {
+        case "initial":
+            qHDisp.attr("style", "display: none");
+            qDisp.attr("style", "display: none");
+            scoreCard.attr("style", "display: none");
+
+            break;
         case "start":
             // secondsLeft = 60;
             startBtn.attr("style", "display: none");
@@ -130,10 +151,11 @@ function visualizeEl(event) {
         case "score":
             tDisp.text("Timer");
             startBtn.attr("style", "display: none");
+            qHDisp.attr("style", "display: none");
             qDisp.attr("style", "display: none");
-            // qHDisp.attr("style", "display: block");
-            qHDisp.text("Your Score:");  
-            // logScore(); 
+            scoreCard.attr("style", "display: block");
+            $(".card-title").text(score + bonus);
+            $(".card-text").text(`correct answers(${score}) + extra time(${bonus})`);
             break;        
         case "newQuestion":
             var currentQuestion = randQuestions[newQuestionIndex];
@@ -142,20 +164,13 @@ function visualizeEl(event) {
                 $(`#${i}`).text(currentQuestion[options[i]]);
             };
             qHDisp.text(currentQuestion.question);
-            newQuestionIndex++;
-            if (newQuestionIndex === questions.length){
-                // Add bonus for ending early
-                visualizeEl("score");
-            };
             break;
-            // qHDisp.empty();
-            // qDisp.empty();
-
-        
-        // startBtn.setAttribute("style", "display: block");
-        // quizQuestions.setAttribute("style", "display: none");
+        case "viewHighScores":
+            console.log("Add the local storage element.");
+        // Default
     }
 }
+
 
 
 
