@@ -67,6 +67,11 @@ var options = [];
 const qArr = ["correct", "wrong1", "wrong2", "wrong3"];
 var randQuestions = randomIndexArray(questions);
 
+// Timer reinitializes the screen
+tDisp.on("click", function(event){
+    event.preventDefault();
+    visualizeEl();
+});
 
 // Start button
 startBtn.on("click", function(event){
