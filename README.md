@@ -1,10 +1,9 @@
 # HW4
 
 // Priorities
+// OR have them enter their name anyways
 // 0 localStorage
 // Table of all the top 10 scores
-// If the person gets a score that makes the high score then ask them to enter their name
-// OR have them enter their name anyways
 // BADASS README (check notes)
     // 1 subtraction (visual and sound) (doesn't update fast enough)
     //   Exiting the 60 seconds with the wrong answer doesn't punish you (gets the bonus)
