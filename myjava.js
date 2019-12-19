@@ -50,9 +50,9 @@ var scoreCard = $(".card");
 var startBtn = $(".btn-primary");
 var ansBtn = $(".btn-outline-secondary");
 var highBtn = $(".btn-secondary");
-var highScoreDisplay = $(".highScoreDisplay")
 var nameScore = $("#nameScore")
 var nameScoreForm = $(".nameScoreForm")
+var highScoreRankDisp = $(".highScoreRank")
 visualizeEl();
 var subtractTime = false;
 var outofQuestions = false;
@@ -107,45 +107,27 @@ ansBtn.on("click", function(event){
 // Input Form
 nameScoreForm.on("submit", function(event){
     event.preventDefault();
-    console.log("PLEASE!")
-    console.log(nameScore[0].value);
-    console.log(userScore);
-    highScores[nameScore[0].value] = userScore;
+    storeHighScores(highScores);
     nameScore[0].value = "";
+
     visualizeEl();
-    console.log(highScores)
-    // nameScore.text();
 });
 
+function storeHighScores(highScores) {
+    var storedHighScores = JSON.parse(localStorage.getItem("highScores"));
+    if ( storedHighScores !== null){
+        highScores = storedHighScores;
+    };
+    highScores[nameScore[0].value] = userScore; // I think this breaks if not unique name
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+  };
 
-// High score button
-highBtn.on("click", function(event){
-    event.preventDefault();
-    console.log("I'm a high score button");
-    // var storedHighScores = JSON.parse(localStorage.getItem("highScores"));
-    // if (storedHighScores !== null) {
-    //     highScores = storedHighScores;
-    // };
-    // visualizeEl("viewHighScores")
-
-});
-
-
-    // function storeHighScores() {
-    //     localStorage.setItem("highScores", JSON.stringify(highScores));
-    //   }
-      //!!! Make a 
-    //   // When form is submitted...
-    //   highScoreForm.on("submit", function(event) {
-    //     event.preventDefault();
-    //==========================================================   
-    //     var todoText = todoInput.value.trim();
-      
-    //     // Return from function early if submitted todoText is blank
-    //     if (todoText === "") {
-    //       return;
-    //     }
-      // Add new todoText to todos array, clear the input
+    
+//     // Return from function early if submitted todoText is blank
+//     if (todoText === "") {
+//       return;
+//     }
+    // Add new todoText to todos array, clear the input
 //   todos.push(todoText);
 //   todoInput.value = "";
 
@@ -154,6 +136,29 @@ highBtn.on("click", function(event){
 //   renderTodos();
 // });
 
+// Finding the key for a value
+function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+  };
+
+// High score button
+highBtn.on("click", function(event){
+    event.preventDefault();
+    visualizeEl("viewHighScores");
+    var storedHighScores = JSON.parse(localStorage.getItem("highScores"));
+    if (storedHighScores !== null) {
+        highScores = storedHighScores;
+    };
+    var highScoreArr = Object.values(highScores);
+    highScoreArr.sort(function(a, b) {
+        return a - b;
+      });
+    highScoreArr.reverse();
+
+    for (let i=0; i < highScoreArr.length; i++){
+        var listScore = $(`#h${i}`).text(getKeyByValue(highScores, highScoreArr[i]) + ": " + highScoreArr[i]);
+    };
+});
 
 // Timer
 function setTime() {
@@ -195,7 +200,7 @@ function randomIndexArray(arr){
   };
 
 // Visualizes the different elements on the screen depending on the event
-function visualizeEl(event) {
+function visualizeEl(event){
     switch(event) {
         // case "initial":
         //     qHDisp.attr("style", "display: none");
@@ -210,6 +215,7 @@ function visualizeEl(event) {
             visualizeEl("newQuestion");
             qHDisp.attr("style", "display: block");
             qDisp.attr("style", "display: block");
+            highScoreRankDisp.attr("style", "display: none");
             // qHDisp.addClass("d-flex justify-content-center");
             break;
         case "score":
@@ -232,15 +238,20 @@ function visualizeEl(event) {
             qHDisp.text(currentQuestion.question);
             break;
         case "viewHighScores":
-            console.log("Add the local storage element.");
+            highScoreRankDisp.attr("style", "display: block");
+            break;
+
 
         default:
             qHDisp.attr("style", "display: none");
             qDisp.attr("style", "display: none");
             scoreCard.attr("style", "display: none");
             nameScoreForm.attr("style", "display: none");
+            highScoreRankDisp.attr("style", "display: none");
             startBtn.attr("style", "display: block");
             randQuestions = randomIndexArray(questions);
+            break;
+        };
             // highScoreDisplay.empty();
     //     // ClearhighScores element and update todoCountSpan
     //    highScoreDisplay.innerHTML = "";      
@@ -257,9 +268,4 @@ function visualizeEl(event) {
     //      highScoreDisplay.appendChild(li);
     //     }
         // Default
-    }
-}
-
-
-
-
+    };
